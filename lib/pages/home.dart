@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
     'EPSI Grenoble',
   ];
 
-  // Fonction pour ouvrir le modal de sélection d'emplacement
   void _showLocationModal() {
     showModalBottomSheet(
       backgroundColor: Colors.white,
@@ -79,6 +78,7 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(CupertinoIcons.person_crop_circle),
             color: Colors.black,
             onPressed: () {
+              Navigator.popAndPushNamed(context, '/register');
             },
           ),
         ],
