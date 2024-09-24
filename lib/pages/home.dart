@@ -12,10 +12,19 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text("epsi portal"),
-        actions: const [Icon(CupertinoIcons.person_crop_circle)],
+        title: Image.asset("assets/logo_epsi_portal2.png", width: 230,),
+        actions: [
+          IconButton(
+            icon: const Icon(CupertinoIcons.person_crop_circle),
+            color: Colors.black,
+            onPressed: () {
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         backgroundColor: Colors.white,
@@ -26,35 +35,56 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.zero,
                 children: [
                   DrawerHeader(
-                    child: Image.asset("assets/logo.webp"),
+                    child: Image.asset("assets/logo_epsi_portal2.png"),
                   ),
-                  const ListTile(
-                    leading: Icon(CupertinoIcons.house),
-                    title: Text("Accueil"),
+                  ListTile(
+                    leading: const Icon(CupertinoIcons.house),
+                    title: const Text("Accueil"),
+                    onTap: () {
+                      Navigator.popAndPushNamed(context, '/accueil');
+                    },
                   ),
-                  const ListTile(
-                    leading: Icon(CupertinoIcons.bubble_left_bubble_right),
-                    title: Text("Forum"),
+                  ListTile(
+                    leading: const Icon(CupertinoIcons.bubble_left_bubble_right),
+                    title: const Text("Forum"),
+                    onTap: () {
+                      Navigator.popAndPushNamed(context, '/forum');
+                    },
                   ),
-                  const ListTile(
-                    leading: Icon(Icons.celebration_outlined),
-                    title: Text("Évenements"),
+                  ListTile(
+                    leading: const Icon(Icons.celebration_outlined),
+                    title: const Text("Évenements"),
+                    onTap: () {
+                      Navigator.popAndPushNamed(context, '/events');
+                    },
                   ),
-                  const ListTile(
-                    leading: Icon(CupertinoIcons.map),
-                    title: Text("Plan interactif"),
+                  ListTile(
+                    leading: const Icon(CupertinoIcons.map),
+                    title: const Text("Plan interactif"),
+                    onTap: () {
+                      Navigator.popAndPushNamed(context, '/map');
+                    },
                   ),
-                  const ListTile(
-                    leading: Icon(CupertinoIcons.calendar),
-                    title: Text("Réservations"),
+                  ListTile(
+                    leading: const Icon(CupertinoIcons.calendar),
+                    title: const Text("Réservations"),
+                    onTap: () {
+                      Navigator.popAndPushNamed(context, '/reservations');
+                    },
                   ),
-                  const ListTile(
-                    leading: Icon(CupertinoIcons.lightbulb),
-                    title: Text("Infos utiles"),
+                  ListTile(
+                    leading: const Icon(CupertinoIcons.lightbulb),
+                    title: const Text("Infos utiles"),
+                    onTap: () {
+                      Navigator.popAndPushNamed(context, '/infos');
+                    },
                   ),
-                  const ListTile(
-                    leading: Icon(Icons.school_outlined),
-                    title: Text("Nos apprenant ont du talent"),
+                  ListTile(
+                    leading: const Icon(Icons.school_outlined),
+                    title: const Text("Nos apprenant ont du talent"),
+                    onTap: () {
+                      Navigator.popAndPushNamed(context, '/nos-apprenants');
+                    },
                   ),
                 ],
               ),
@@ -62,16 +92,16 @@ class _HomePageState extends State<HomePage> {
             Align(
               alignment: Alignment.bottomCenter,
               child: ListTile(
-                leading: Icon(Icons.campaign_outlined),
-                title: Text("Signaler"),
+                leading: const Icon(Icons.campaign_outlined),
+                title: const Text("Signaler"),
                 onTap: () {
+                  Navigator.popAndPushNamed(context, '/signaler');
                 },
               ),
             ),
           ],
         ),
       ),
-
       body: const Center(
         child: Column(
 
