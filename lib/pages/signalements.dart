@@ -1,7 +1,15 @@
+import 'dart:convert';
+
 import 'package:epsi_hub/class/signalement.dart';
+import 'package:epsi_hub/class/user_class.dart';
 import 'package:epsi_hub/fonctions/signalement_API.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+AndroidOptions _getAndroidOptions() => const AndroidOptions(
+  encryptedSharedPreferences: true,
+);
 
 class SignalementsPage extends StatefulWidget {
   const SignalementsPage({super.key});
@@ -13,6 +21,8 @@ class SignalementsPage extends StatefulWidget {
 class _SignalementsPageState extends State<SignalementsPage> {
   List<Signalement> _listeSignalement = [];
   bool _isLoading = true;
+  final storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
+  User user = User(0, "_email","role", "_token", "_prenom", "_nom", "_campus");
 
   @override
   void initState() {
@@ -21,7 +31,11 @@ class _SignalementsPageState extends State<SignalementsPage> {
   }
 
   void chargement() async {
-    _listeSignalement = await initListSignalement(_listeSignalement);
+    var value = await storage.read(key: "userData");
+    if (value != null) {
+      user = User.fromJson(jsonDecode(value));
+    }
+    _listeSignalement = await initListSignalementUser(_listeSignalement,user.getId());
     print(_listeSignalement);
     setState(() {
       _isLoading = false;
