@@ -33,7 +33,6 @@ class User {
     return _campus;
   }
 
-
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
         json['id'],
