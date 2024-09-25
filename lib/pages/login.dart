@@ -37,7 +37,6 @@ class _LoginPageState extends State<LoginPage> {
         centerTitle: true,
         title: Image.asset("assets/logo_epsi_portal2.png", width: 230),
       ),
-      drawer: appDrawer(context),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[

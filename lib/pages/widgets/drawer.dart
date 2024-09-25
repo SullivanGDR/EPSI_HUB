@@ -41,6 +41,13 @@ Drawer appDrawer(BuildContext context) {
                   Navigator.popAndPushNamed(context, '/infos');
                 },
               ),
+              ListTile(
+                leading: const Icon(CupertinoIcons.exclamationmark_octagon),
+                title: const Text("Vos signalements"),
+                onTap: () {
+                  Navigator.popAndPushNamed(context, '/signalements');
+                },
+              ),
             ],
           ),
         ),

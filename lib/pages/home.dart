@@ -8,6 +8,7 @@ import 'package:epsi_hub/class/user_class.dart';
 import 'package:epsi_hub/fonctions/actualite_API.dart';
 import 'package:epsi_hub/fonctions/event_API.dart';
 import 'package:epsi_hub/fonctions/login_api.dart';
+import 'package:epsi_hub/pages/login.dart';
 import 'package:epsi_hub/pages/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -115,7 +116,7 @@ class _HomePageState extends State<HomePage> {
           ? const Center(
             child: CircularProgressIndicator(),
       )
-          : _buildContent(),
+          : _isLog ? _buildContent() : LoginPage(),
     );
   }
 
