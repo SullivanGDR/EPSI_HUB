@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:epsi_hub/class/topicReponse_class.dart';
 import 'package:epsi_hub/class/topic_class.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -22,8 +23,13 @@ Future<List<Topic>> initListTopic(List<Topic> listeTopics) async {
       final String Description = topic['message'];
       final DateTime Date = DateTime.parse(topic['date']);
       final String utilisateur = topic['user']['nom']+' '+topic['user']['prenom'];
-      final List Rep = topic['topicReponses'];
-      Topic champion = Topic(Id, Titre, Description,Date,utilisateur,Rep.length);
+      final List Reps = topic['topicReponses'];
+      final List<TopicR> reponse = [];
+      for(var rep in Reps){
+        String user = rep['user']['nom']+' '+rep['user']['prenom'];
+        reponse.add(TopicR(rep['message'],DateTime.parse(rep['date']),user));
+      }
+      Topic champion = Topic(Id, Titre, Description,Date,utilisateur,Reps.length,reponse);
       print(champion);
       listeTopics.add(champion);
     }
