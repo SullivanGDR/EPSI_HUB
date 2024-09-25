@@ -58,6 +58,7 @@ class _HomePageState extends State<HomePage> {
   
   String? selectedLocation;
 
+  List _filteredEvents = [];
   // Liste des campus EPSI disponibles en France
   final List<String> locations = [
     'EPSI Paris',
@@ -95,6 +96,7 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         setState(() {
                           selectedLocation = location;
+                          _filterEventsByCampus(location);
                         });
                         Navigator.pop(context); // Ferme le modal
                       },
@@ -107,6 +109,12 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+
+  void _filterEventsByCampus(String campus) {
+    setState(() {
+      _filteredEvents = _listeEvents.where((event) => event.campus == campus).toList();
+    });
   }
 
   @override
@@ -161,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     const Icon(Icons.location_on, color: Colors.red),
                     Text(
-                      selectedLocation ?? 'Aucun emplacement sélectionné',
+                      selectedLocation ?? user.getCampus()!,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black,
@@ -174,7 +182,7 @@ class _HomePageState extends State<HomePage> {
           const Padding(padding: EdgeInsets.only(left: 16), child:Text("Événements à venir", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),),
           const SizedBox(height: 10),
           CarouselSlider(
-            items: _listeEvents.map((event) {
+            items: _filteredEvents.map((event) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Container(

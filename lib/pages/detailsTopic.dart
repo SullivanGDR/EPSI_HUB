@@ -78,23 +78,21 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
                   const SizedBox(width: 5),
                   Icon(
                     _showResponses
-                        ? CupertinoIcons.chevron_up
-                        : CupertinoIcons.chevron_down,
+                        ? CupertinoIcons.chevron_down
+                        : CupertinoIcons.chevron_up,
                     color: Colors.grey[600],
                   ),
                 ],
               ),
-            ),/*
+            ),
             AnimatedCrossFade(
               firstChild: Container(),
               secondChild: Column(
-                children: widget.topic.map((response) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      response,
-                      style: TextStyle(color: Colors.black),
-                    ),
+                children: widget.topic.getRep().map((response) {
+                  return ListTile(
+                    leading: Icon(CupertinoIcons.person_crop_circle),
+                    title: Text(response.getUtilisateur()),
+                    subtitle: Text(response.getMessage()),
                   );
                 }).toList(),
               ),
@@ -103,7 +101,6 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
                   : CrossFadeState.showFirst,
               duration: const Duration(milliseconds: 300),
             ),
-            */
           ],
         ),
       ),
