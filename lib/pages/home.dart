@@ -1,4 +1,7 @@
-import 'package:epsi_hub/pages/widgets/carousel_events.dart';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:epsi_hub/class/events.dart';
+import 'package:epsi_hub/fonctions/event_API.dart';
 import 'package:epsi_hub/pages/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +15,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Event> _listeEvents = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    chargement();
+  }
+
+  void chargement() async {
+    _listeEvents = await initListevent(_listeEvents);
+    print(_listeEvents);
+    setState(() {
+      _isLoading = false;
+    });
+  }
+  
   String? selectedLocation;
 
   // Liste des campus EPSI disponibles en France
@@ -116,7 +136,76 @@ class _HomePageState extends State<HomePage> {
           ),),
           const Padding(padding: EdgeInsets.only(left: 16), child:Text("Événements à venir", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),),
           const SizedBox(height: 10),
-          CarouselSliderPub(context),
+          CarouselSlider(
+            items: _listeEvents.map((event) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'EPSI-WIS ARRAS',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        event.titre,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const Icon(CupertinoIcons.calendar, color: Colors.black, size: 20),
+                          const SizedBox(width: 8), // Espacement entre l'icône et la date
+                          Text(
+                            DateFormat('d MMMM y').format(event.date), // Formattage de la date
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        event.description,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+            options: CarouselOptions(
+              height: 150,
+              autoPlay: true,
+              viewportFraction: 1,
+              autoPlayInterval: const Duration(seconds: 3),
+              autoPlayAnimationDuration: const Duration(milliseconds: 800),
+              autoPlayCurve: Curves.fastOutSlowIn,
+              enableInfiniteScroll: true,
+            ),
+          ),
           const SizedBox(height: 10),
           const Padding(padding: EdgeInsets.only(left: 16), child:Text("Actualités", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),),
           const SizedBox(height: 10),
