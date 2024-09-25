@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:epsi_hub/class/actualite.dart';
-import 'package:epsi_hub/class/user_class.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<Actualite>> initListActu(List<Actualite> listeActus) async {

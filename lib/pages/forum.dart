@@ -33,8 +33,8 @@ class _ForumPageState extends State<ForumPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Center(
-                        child: const Text(
+                      const Center(
+                        child: Text(
                           'Rédiger un nouveau post',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
@@ -127,7 +127,7 @@ class _ForumPageState extends State<ForumPage> {
         children: [
           Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               border: Border(
                 bottom: BorderSide(color: Colors.black, width: 1.0)
@@ -139,11 +139,11 @@ class _ForumPageState extends State<ForumPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
+                        SizedBox(width: 10),
+                        Text(
                           'Utilisateur',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -172,7 +172,7 @@ class _ForumPageState extends State<ForumPage> {
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
+                    const Icon(CupertinoIcons.bubble_left_bubble_right),
                     const SizedBox(width: 5),
                     Text(
                       '26 réponses disponibles',
@@ -187,7 +187,7 @@ class _ForumPageState extends State<ForumPage> {
           ),
           Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
                     bottom: BorderSide(color: Colors.black, width: 1.0)
@@ -199,11 +199,11 @@ class _ForumPageState extends State<ForumPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
+                        SizedBox(width: 10),
+                        Text(
                           'Utilisateur',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -232,7 +232,7 @@ class _ForumPageState extends State<ForumPage> {
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
+                    const Icon(CupertinoIcons.bubble_left_bubble_right),
                     const SizedBox(width: 5),
                     Text(
                       '26 réponses disponibles',
@@ -247,7 +247,7 @@ class _ForumPageState extends State<ForumPage> {
           ),
           Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
                     bottom: BorderSide(color: Colors.black, width: 1.0)
@@ -259,11 +259,11 @@ class _ForumPageState extends State<ForumPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
+                        SizedBox(width: 10),
+                        Text(
                           'Utilisateur',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -292,7 +292,7 @@ class _ForumPageState extends State<ForumPage> {
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
+                    const Icon(CupertinoIcons.bubble_left_bubble_right),
                     const SizedBox(width: 5),
                     Text(
                       '26 réponses disponibles',
@@ -307,7 +307,7 @@ class _ForumPageState extends State<ForumPage> {
           ),
           Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
                     bottom: BorderSide(color: Colors.black, width: 1.0)
@@ -319,11 +319,11 @@ class _ForumPageState extends State<ForumPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
+                        SizedBox(width: 10),
+                        Text(
                           'Utilisateur',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -352,7 +352,7 @@ class _ForumPageState extends State<ForumPage> {
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
+                    const Icon(CupertinoIcons.bubble_left_bubble_right),
                     const SizedBox(width: 5),
                     Text(
                       '26 réponses disponibles',
@@ -367,7 +367,7 @@ class _ForumPageState extends State<ForumPage> {
           ),
           Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
                     bottom: BorderSide(color: Colors.black, width: 1.0)
@@ -379,11 +379,11 @@ class _ForumPageState extends State<ForumPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
+                        SizedBox(width: 10),
+                        Text(
                           'Utilisateur',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -412,7 +412,7 @@ class _ForumPageState extends State<ForumPage> {
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
+                    const Icon(CupertinoIcons.bubble_left_bubble_right),
                     const SizedBox(width: 5),
                     Text(
                       '26 réponses disponibles',
@@ -427,7 +427,7 @@ class _ForumPageState extends State<ForumPage> {
           ),
           Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
                     bottom: BorderSide(color: Colors.black, width: 1.0)
@@ -439,11 +439,11 @@ class _ForumPageState extends State<ForumPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
+                        SizedBox(width: 10),
+                        Text(
                           'Utilisateur',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -472,7 +472,7 @@ class _ForumPageState extends State<ForumPage> {
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
+                    const Icon(CupertinoIcons.bubble_left_bubble_right),
                     const SizedBox(width: 5),
                     Text(
                       '26 réponses disponibles',
@@ -487,7 +487,7 @@ class _ForumPageState extends State<ForumPage> {
           ),
           Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
                     bottom: BorderSide(color: Colors.black, width: 1.0)
@@ -499,11 +499,11 @@ class _ForumPageState extends State<ForumPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
+                        SizedBox(width: 10),
+                        Text(
                           'Utilisateur',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -532,7 +532,7 @@ class _ForumPageState extends State<ForumPage> {
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
+                    const Icon(CupertinoIcons.bubble_left_bubble_right),
                     const SizedBox(width: 5),
                     Text(
                       '26 réponses disponibles',
@@ -547,7 +547,7 @@ class _ForumPageState extends State<ForumPage> {
           ),
           Container(
             padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
                     bottom: BorderSide(color: Colors.black, width: 1.0)
@@ -559,11 +559,11 @@ class _ForumPageState extends State<ForumPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
+                        SizedBox(width: 10),
+                        Text(
                           'Utilisateur',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -592,7 +592,7 @@ class _ForumPageState extends State<ForumPage> {
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
+                    const Icon(CupertinoIcons.bubble_left_bubble_right),
                     const SizedBox(width: 5),
                     Text(
                       '26 réponses disponibles',
@@ -610,8 +610,8 @@ class _ForumPageState extends State<ForumPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _showPostModal,
         backgroundColor: Colors.white,
-        child: Icon(CupertinoIcons.chat_bubble_2),
-        shape: CircleBorder(),
+        child: const Icon(CupertinoIcons.chat_bubble_2),
+        shape: const CircleBorder(),
       ),
     );
   }

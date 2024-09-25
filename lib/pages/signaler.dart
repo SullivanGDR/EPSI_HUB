@@ -47,7 +47,7 @@ class _SignalerPageState extends State<SignalerPage> {
                     print('Raison: ${_reasonController.text}');
                     print('Urgence: $_urgency');
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Signalement soumis avec succès !')),
+                      const SnackBar(content: Text('Signalement soumis avec succès !')),
                     );
                   }
                 },
@@ -60,19 +60,19 @@ class _SignalerPageState extends State<SignalerPage> {
                 },
                 steps: [
                   Step(
-                    title: Text('Type de signalement'),
+                    title: const Text('Type de signalement'),
                     content: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Sélectionner le type de signalement',
                       ),
-                      items: [
+                      items: const [
 
-                        DropdownMenuItem(child: Text('Problèmes techniques'), value: 'tech'),
-                        DropdownMenuItem(child: Text('Problèmes pédagogiques'), value: 'peda'),
-                        DropdownMenuItem(child: Text('Problèmes administratifs'), value: 'admin'),
-                        DropdownMenuItem(child: Text('Suggestions d\'améliorations'), value: 'amelio'),
-                        DropdownMenuItem(child: Text('Comportements inapropriés'), value: 'comportements'),
-                        DropdownMenuItem(child: Text('Problèmes infrastructures'), value: 'infra'),
+                        DropdownMenuItem(value: 'tech', child: Text('Problèmes techniques')),
+                        DropdownMenuItem(value: 'peda', child: Text('Problèmes pédagogiques')),
+                        DropdownMenuItem(value: 'admin', child: Text('Problèmes administratifs')),
+                        DropdownMenuItem(value: 'amelio', child: Text('Suggestions d\'améliorations')),
+                        DropdownMenuItem(value: 'comportements', child: Text('Comportements inapropriés')),
+                        DropdownMenuItem(value: 'infra', child: Text('Problèmes infrastructures')),
                       ],
                       onChanged: (value) {
                         setState(() {
@@ -83,10 +83,10 @@ class _SignalerPageState extends State<SignalerPage> {
                     isActive: _currentStep >= 0,
                   ),
                   Step(
-                    title: Text('Raison du signalement'),
+                    title: const Text('Raison du signalement'),
                     content: TextField(
                       controller: _reasonController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Décrire la raison',
                         border: OutlineInputBorder(),
                       ),
@@ -95,11 +95,11 @@ class _SignalerPageState extends State<SignalerPage> {
                     isActive: _currentStep >= 1,
                   ),
                   Step(
-                    title: Text('Urgence'),
+                    title: const Text('Urgence'),
                     content: Column(
                       children: [
                         RadioListTile<String>(
-                          title: Text('Faible'),
+                          title: const Text('Faible'),
                           value: 'Faible',
                           groupValue: _urgency,
                           onChanged: (value) {
@@ -109,7 +109,7 @@ class _SignalerPageState extends State<SignalerPage> {
                           },
                         ),
                         RadioListTile<String>(
-                          title: Text('Moyenne'),
+                          title: const Text('Moyenne'),
                           value: 'Moyenne',
                           groupValue: _urgency,
                           onChanged: (value) {
@@ -119,7 +119,7 @@ class _SignalerPageState extends State<SignalerPage> {
                           },
                         ),
                         RadioListTile<String>(
-                          title: Text('Élevée'),
+                          title: const Text('Élevée'),
                           value: 'Élevée',
                           groupValue: _urgency,
                           onChanged: (value) {

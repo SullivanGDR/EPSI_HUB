@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.white,
       body: _isLoading
           ? const Center(
-        child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(),
       )
           : _buildContent(),
     );

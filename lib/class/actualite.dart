@@ -1,5 +1,3 @@
-import 'package:epsi_hub/class/user_class.dart';
-
 class Actualite {
   final int id;
   final String titre;
