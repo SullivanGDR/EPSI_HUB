@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:epsi_hub/class/topic_class.dart';
 import 'package:epsi_hub/class/user_class.dart';
 import 'package:epsi_hub/fonctions/topic_api.dart';
+import 'package:epsi_hub/pages/detailsTopic.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -169,70 +170,77 @@ class _ForumPageState extends State<ForumPage> {
         child: ListView.builder(itemCount : _listeTopic.length
             ,itemBuilder: (context,index){
           final topic = _listeTopic[index];
-          return Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 1.0)
-                )
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                         Text(
-                          '${topic.getUtilisateur()}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailsTopicPage(topic: topic),
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                      bottom: BorderSide(color: Colors.black, width: 1.0)
+                  )
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(CupertinoIcons.person_crop_circle),
+                          const SizedBox(width: 10),
+                          Text(
+                            '${topic.getUtilisateur()}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
+                        ],
+                      ),
+                      Text(
+                        'Publié le : ${DateFormat('dd/MM/yyyy').format(topic.getDate())}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600], // Gris clair
                         ),
-                      ],
-                    ),
-                    Text(
-                      'Publié le : ${DateFormat('dd/MM/yyyy').format(topic.getDate())}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600], // Gris clair
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                 Text(
-                  topic.getDescription(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
+                    ],
                   ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
-                    const SizedBox(width: 5),
-                    Text(
-                      '${topic.getNbRep()} réponses disponibles',
-                      style: TextStyle(
-                        color: Colors.grey[600], // Gris clair
-                      ),
+                  const SizedBox(height: 10),
+                  Text(
+                    topic.getDescription(),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
                     ),
-                  ],
-                )
-              ],
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Icon(CupertinoIcons.bubble_left_bubble_right),
+                      const SizedBox(width: 5),
+                      Text(
+                        '${topic.getNbRep()} réponses disponibles',
+                        style: TextStyle(
+                          color: Colors.grey[600], // Gris clair
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           );
-            })
-
-
-        ,
+        }),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showPostModal,
