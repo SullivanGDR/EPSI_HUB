@@ -84,15 +84,15 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
                   ),
                 ],
               ),
-            ),
+            ),/*
             AnimatedCrossFade(
               firstChild: Container(),
               secondChild: Column(
-                children: widget.topic.getRep().map((response) {
+                children: widget.topic.map((response) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
-                      response.getMessage(),
+                      response,
                       style: TextStyle(color: Colors.black),
                     ),
                   );
@@ -103,6 +103,7 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
                   : CrossFadeState.showFirst,
               duration: const Duration(milliseconds: 300),
             ),
+            */
           ],
         ),
       ),
