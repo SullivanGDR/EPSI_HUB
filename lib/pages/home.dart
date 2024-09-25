@@ -143,6 +143,8 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               if(_isLog==false) {
                 Navigator.popAndPushNamed(context, '/register');
+              }else{
+                Navigator.popAndPushNamed(context, '/profil');
               }
             },
           ),

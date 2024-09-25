@@ -3,6 +3,7 @@ import 'package:epsi_hub/pages/home.dart';
 import 'package:epsi_hub/pages/infos_utiles.dart';
 import 'package:epsi_hub/pages/login.dart';
 import 'package:epsi_hub/pages/map.dart';
+import 'package:epsi_hub/pages/profil.dart';
 import 'package:epsi_hub/pages/register.dart';
 import 'package:epsi_hub/pages/signalements.dart';
 import 'package:epsi_hub/pages/signaler.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/accueil': (BuildContext context) => const HomePage(),
         '/forum': (BuildContext context) => const ForumPage(),
+        '/profil': (BuildContext context) => const Profil(),
         '/map': (BuildContext context) => const MapPage(),
         '/infos': (BuildContext context) => InfosUtilesPage(),
         '/signaler': (BuildContext context) => const SignalerPage(),

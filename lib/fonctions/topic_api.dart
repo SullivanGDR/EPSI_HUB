@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 Future<List<Topic>> initListTopic(List<Topic> listeTopics) async {
-  String baseUrl = '10.60.12.49';
+  String baseUrl = '192.168.1.34';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
@@ -42,7 +42,7 @@ Future<List<Topic>> initListTopic(List<Topic> listeTopics) async {
 
 
 Future<bool> addTopic(titre, message,id) async {
-  String baseUrl = '10.60.12.49';
+  String baseUrl = '192.168.1.34';
   Map<String, String> header = {
     "Content-type": "application/ld+json",
     "Accept": 'application/ld+json',
@@ -62,6 +62,34 @@ Future<bool> addTopic(titre, message,id) async {
 
   if (response.statusCode == 201) {
     print("topic créé");
+    return true;
+  } else {
+    print("Error: ${response.statusCode} - ${response.reasonPhrase}");
+    return false;
+  }
+}
+
+Future<bool> addTopicR(topic, message,id) async {
+  String baseUrl = '192.168.1.34';
+  Map<String, String> header = {
+    "Content-type": "application/ld+json",
+    "Accept": 'application/ld+json',
+  };
+  final uri = Uri.http(baseUrl, '/api/topic_reponses');
+
+  final response = await http.post(
+    uri,
+    headers: header,
+    body: jsonEncode({
+      "topic": 'http://10.60.12.49/api/topics/$topic',
+      "date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      "message": message,
+      "user": 'http://10.60.12.49/api/users/$id'
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    print("topicR créé");
     return true;
   } else {
     print("Error: ${response.statusCode} - ${response.reasonPhrase}");

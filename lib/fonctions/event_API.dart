@@ -3,7 +3,7 @@ import 'package:epsi_hub/class/events.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<Event>> initListevent(List<Event> listeEvents) async {
-  String baseUrl = '10.60.12.49';
+  String baseUrl = '192.168.1.34';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',

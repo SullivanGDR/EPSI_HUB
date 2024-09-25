@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:epsi_hub/class/signalement.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 Future<List<Signalement>> initListSignalement(List<Signalement> listeSignalement) async {
-  String baseUrl = '10.60.12.49';
+  String baseUrl = '192.168.1.34';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
@@ -38,7 +39,7 @@ Future<List<Signalement>> initListSignalement(List<Signalement> listeSignalement
 
 
 Future<List<Signalement>> initListSignalementUser(List<Signalement> listeSignalement,int id) async {
-  String baseUrl = '10.60.12.49';
+  String baseUrl = '192.168.1.34';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
@@ -69,4 +70,33 @@ Future<List<Signalement>> initListSignalementUser(List<Signalement> listeSignale
     print("Erreur: ${response.statusCode} - ${response.reasonPhrase}");
   }
   return listeSignalement;
+}
+
+Future<bool> addSignalement(titre, description,id) async {
+  String baseUrl = '192.168.1.34';
+  Map<String, String> header = {
+    "Content-type": "application/ld+json",
+    "Accept": 'application/ld+json',
+  };
+  final uri = Uri.http(baseUrl, '/api/reports');
+
+  final response = await http.post(
+    uri,
+    headers: header,
+    body: jsonEncode({
+      "titre": titre,
+      "date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      "description": description,
+      "status" : "en cours",
+      "user" : 'http://192.168.1.34/api/users/$id'
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    print("topic créé");
+    return true;
+  } else {
+    print("Error: ${response.statusCode} - ${response.reasonPhrase}");
+    return false;
+  }
 }
