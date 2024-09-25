@@ -1,6 +1,15 @@
+import 'dart:convert';
+
+import 'package:epsi_hub/class/user_class.dart';
+import 'package:epsi_hub/fonctions/login_api.dart';
 import 'package:epsi_hub/pages/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+AndroidOptions _getAndroidOptions() => const AndroidOptions(
+  encryptedSharedPreferences: true,
+);
 
 TextEditingController _passwordController = TextEditingController();
 TextEditingController _emailController = TextEditingController();
@@ -13,6 +22,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
+
+  Future<User?> connexion(email, mdp) async {
+    var rep =await login(email, mdp);
+    return rep;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
                 ),
-                onPressed: () async{ /*
+                onPressed: () async{
                   String password = _passwordController.text;
                   String email = _emailController.text;
                   User? res = await connexion(email,password);
@@ -74,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                       const SnackBar(content: Text('Vous êtes connecter')),
                     );
                     Navigator.popAndPushNamed(context, '/accueil');
-                  }*/
+                  }
                 },
                 child: const Text(
                   'Se connecter',

@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<bool> register(email, mdp, nom, prenom, adresse, ville, cp, pays) async {
-  String baseUrl = 's3-4674.nuage-peda.fr';
+Future<bool> register(email, mdp, nom, prenom,campus) async {
+  String baseUrl = '10.60.12.49';
   Map<String, String> header = {
     "Content-type": "application/ld+json",
     "Accept": 'application/ld+json',
   };
-  final uri = Uri.http(baseUrl, '/GDSport/public/api/users');
+  final uri = Uri.http(baseUrl,'/api/users');
 
   final response = await http.post(
     uri,
@@ -17,10 +17,7 @@ Future<bool> register(email, mdp, nom, prenom, adresse, ville, cp, pays) async {
       "password": mdp,
       "nom": nom,
       "prenom": prenom,
-      "adresse": adresse,
-      "pays": pays,
-      "ville": ville,
-      "codePostal": cp
+      "campus": 'http://10.60.12.49/api/campuses/$campus'
     }),
   );
 
