@@ -34,7 +34,7 @@ class User {
     return _nom;
   }
 
-  String? getCampus() {
+ String? getCampus() {
     return _campus;
   }
 
@@ -58,7 +58,7 @@ class User {
       'email': _email,
       'prenom': _prenom,
       'name': _nom,
-      'pays': _campus
+      'campus': _campus
     };
   }
 }

@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
     var value = await storage.read(key: "userData");
     if (value != null) {
       user = User.fromJson(jsonDecode(value));
+      print(user.getCampus());
       _isLog = await isLogin(user.getToken(), user.getId());
     }
     setState(() {
