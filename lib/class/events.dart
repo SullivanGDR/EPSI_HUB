@@ -3,8 +3,9 @@ class Event {
   final String titre;
   final String description;
   final DateTime date;
+  final String campus;
 
-  Event(this.id, this.titre, this.description, this.date);
+  Event(this.id, this.titre, this.description, this.date,this.campus);
 
   int getId() {
     return id;
@@ -17,5 +18,9 @@ class Event {
   }
   DateTime getDate() {
     return date;
+  }
+
+  String getCampus() {
+    return campus;
   }
 }

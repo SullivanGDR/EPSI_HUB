@@ -19,7 +19,8 @@ Future<List<Event>> initListevent(List<Event> listeEvents) async {
       final String eventTitre = event['titre'];
       final String eventDescription = event['description'];
       final DateTime eventDate = DateTime.parse(event['date']);
-      Event champion = Event(eventId, eventTitre, eventDescription,eventDate);
+      final String campus = event['ecole']['libelle'];
+      Event champion = Event(eventId, eventTitre, eventDescription,eventDate,campus);
       print(champion);
       listeEvents.add(champion);
     }
