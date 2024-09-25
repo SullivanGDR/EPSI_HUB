@@ -1,6 +1,16 @@
+import 'dart:convert';
+
+import 'package:epsi_hub/class/topic_class.dart';
+import 'package:epsi_hub/class/user_class.dart';
+import 'package:epsi_hub/fonctions/topic_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+AndroidOptions _getAndroidOptions() => const AndroidOptions(
+  encryptedSharedPreferences: true,
+);
 
 class ForumPage extends StatefulWidget {
   const ForumPage({super.key});
@@ -10,7 +20,10 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage> {
-
+  List<Topic> _listeTopic = [];
+  bool _isLoading = true;
+  final storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
+  User user = User(0, "_email","role", "_token", "_prenom", "_nom", "_campus");
   void _showPostModal() {
     final TextEditingController _titleController = TextEditingController();
     final TextEditingController _messageController = TextEditingController();
@@ -79,8 +92,7 @@ class _ForumPageState extends State<ForumPage> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: ElevatedButton(
-                          onPressed: () {
-                            // Validation des champs
+                          onPressed: () async{
                             String title = _titleController.text;
                             String message = _messageController.text;
                             if (title.isEmpty || message.isEmpty) {
@@ -89,10 +101,10 @@ class _ForumPageState extends State<ForumPage> {
                                 'Veuillez remplir tous les champs.';
                               });
                             } else {
-                              // Logique pour soumettre les données
+                              await addTopic(title, message, user.getId());
                               print('Titre: $title');
                               print('Message: $message');
-                              Navigator.pop(context); // Ferme le modal après soumission
+                              Navigator.popAndPushNamed(context,'/forum');// Ferme le modal après soumission
                             }
                           },
                           child: const Text('Publier'),
@@ -115,7 +127,37 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    chargement();
+  }
+
+  void chargement() async {
+    _listeTopic = await initListTopic(_listeTopic);
+    print(_listeTopic);
+    var value = await storage.read(key: "userData");
+    if (value != null) {
+      user = User.fromJson(jsonDecode(value));
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: _isLoading
+          ? const Center(
+        child: CircularProgressIndicator(),
+      )
+          : _buildContent(),
+    );
+  }
+
+  @override
+  Widget _buildContent() {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -123,69 +165,11 @@ class _ForumPageState extends State<ForumPage> {
         centerTitle: true,
         title: Image.asset("assets/logo_epsi_portal2.png", width: 230),
       ),
-      body: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                bottom: BorderSide(color: Colors.black, width: 1.0)
-              )
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Utilisateur',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Publié le : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non vulputate risus, varius sodales lectus. Duis eget neque bibendum, lacinia orci ut, luctus enim. Maecenas at iaculis turpis.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
-                    const SizedBox(width: 5),
-                    Text(
-                      '26 réponses disponibles',
-                      style: TextStyle(
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          Container(
+      body: Expanded(
+        child: ListView.builder(itemCount : _listeTopic.length
+            ,itemBuilder: (context,index){
+          final topic = _listeTopic[index];
+          return Container(
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -203,8 +187,8 @@ class _ForumPageState extends State<ForumPage> {
                       children: [
                         Icon(CupertinoIcons.person_crop_circle),
                         const SizedBox(width: 10),
-                        const Text(
-                          'Utilisateur',
+                         Text(
+                          '${topic.getUtilisateur()}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -213,7 +197,7 @@ class _ForumPageState extends State<ForumPage> {
                       ],
                     ),
                     Text(
-                      'Publié le : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
+                      'Publié le : ${DateFormat('dd/MM/yyyy').format(topic.getDate())}',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600], // Gris clair
@@ -222,8 +206,8 @@ class _ForumPageState extends State<ForumPage> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non vulputate risus, varius sodales lectus. Duis eget neque bibendum, lacinia orci ut, luctus enim. Maecenas at iaculis turpis.',
+                 Text(
+                  topic.getDescription(),
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -235,7 +219,7 @@ class _ForumPageState extends State<ForumPage> {
                     Icon(CupertinoIcons.bubble_left_bubble_right),
                     const SizedBox(width: 5),
                     Text(
-                      '26 réponses disponibles',
+                      '${topic.getNbRep()} réponses disponibles',
                       style: TextStyle(
                         color: Colors.grey[600], // Gris clair
                       ),
@@ -244,368 +228,11 @@ class _ForumPageState extends State<ForumPage> {
                 )
               ],
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 1.0)
-                )
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Utilisateur',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Publié le : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non vulputate risus, varius sodales lectus. Duis eget neque bibendum, lacinia orci ut, luctus enim. Maecenas at iaculis turpis.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
-                    const SizedBox(width: 5),
-                    Text(
-                      '26 réponses disponibles',
-                      style: TextStyle(
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 1.0)
-                )
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Utilisateur',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Publié le : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non vulputate risus, varius sodales lectus. Duis eget neque bibendum, lacinia orci ut, luctus enim. Maecenas at iaculis turpis.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
-                    const SizedBox(width: 5),
-                    Text(
-                      '26 réponses disponibles',
-                      style: TextStyle(
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 1.0)
-                )
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Utilisateur',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Publié le : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non vulputate risus, varius sodales lectus. Duis eget neque bibendum, lacinia orci ut, luctus enim. Maecenas at iaculis turpis.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
-                    const SizedBox(width: 5),
-                    Text(
-                      '26 réponses disponibles',
-                      style: TextStyle(
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 1.0)
-                )
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Utilisateur',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Publié le : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non vulputate risus, varius sodales lectus. Duis eget neque bibendum, lacinia orci ut, luctus enim. Maecenas at iaculis turpis.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
-                    const SizedBox(width: 5),
-                    Text(
-                      '26 réponses disponibles',
-                      style: TextStyle(
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 1.0)
-                )
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Utilisateur',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Publié le : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non vulputate risus, varius sodales lectus. Duis eget neque bibendum, lacinia orci ut, luctus enim. Maecenas at iaculis turpis.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
-                    const SizedBox(width: 5),
-                    Text(
-                      '26 réponses disponibles',
-                      style: TextStyle(
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 1.0)
-                )
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(CupertinoIcons.person_crop_circle),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Utilisateur',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Publié le : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non vulputate risus, varius sodales lectus. Duis eget neque bibendum, lacinia orci ut, luctus enim. Maecenas at iaculis turpis.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(CupertinoIcons.bubble_left_bubble_right),
-                    const SizedBox(width: 5),
-                    Text(
-                      '26 réponses disponibles',
-                      style: TextStyle(
-                        color: Colors.grey[600], // Gris clair
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ],
+          );
+            })
+
+
+        ,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showPostModal,

@@ -21,6 +21,7 @@ Future<User?> login(email, mdp) async {
     final Map<String, dynamic> data = json.decode(response.body);
     var user = User(
         data["data"]["id"],
+        data["data"]["roles"][0],
         data["data"]["mail"],
         data["token"],
         data["data"]["prenom"],
@@ -40,7 +41,7 @@ Future<bool> isLogin(token, id) async {
     "Accept": 'application/ld+json',
     'Authorization': "Bearer $token"
   };
-  final uri = Uri.http(baseUrl, '/GDSport/public/api/users/$id');
+  final uri = Uri.http(baseUrl, '/api/users/$id');
 
   final response = await http.get(uri, headers: header);
 
