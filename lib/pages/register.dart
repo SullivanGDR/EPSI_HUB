@@ -1,3 +1,4 @@
+import 'package:epsi_hub/fonctions/register_API.dart';
 import 'package:epsi_hub/pages/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +17,13 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-/*
+
   Future<bool> inscription(
-      email, mdp, nom, prenom, adresse, ville, cp, pays) async {
-    var rep = await RegisterPage(email, mdp, nom, prenom, adresse, ville, cp, pays);
+      email, mdp, nom, prenom, campus) async {
+    var rep = await register(email, mdp, nom, prenom,campus);
     return rep;
   }
-*/
+
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: TextField(
                 controller: _campusController,
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Campus (*)'),
+                    border: OutlineInputBorder(), labelText: 'Campus'),
               ),
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
@@ -115,9 +116,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   String email = _emailController.text;
                   String nom = _nomController.text;
                   String prenom = _prenomController.text;
-                  String adresse = _campusController.text;
-                  var rep = () {};//await inscription(
-                      //email, password, nom, prenom, adresse, ville, cp, pays);
+                  String campus = _campusController.text;
+                  var rep = await inscription(
+                      email, password, nom, prenom,campus);
                   if (rep == true) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Compte créé avec succès')),
