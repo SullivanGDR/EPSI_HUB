@@ -22,6 +22,7 @@ Future<List<Actualite>> initListActu(List<Actualite> listeActus) async {
       final DateTime actualiteDate = DateTime.parse(actualiteJson['date']);
       final String actualiteUserNom = actualiteJson['user']['nom'];
       final String actualiteUserPrenom = actualiteJson['user']['prenom'];
+      final String campus = actualiteJson['campus']['libelle'];
 
       // Créer l'instance d'Actualite avec les informations de l'utilisateur
       Actualite actualite = Actualite(
@@ -30,7 +31,8 @@ Future<List<Actualite>> initListActu(List<Actualite> listeActus) async {
         actualiteDescription,
         actualiteDate,
         actualiteUserNom,
-        actualiteUserPrenom
+        actualiteUserPrenom,
+        campus
       );
 
       listeActus.add(actualite); // Ajouter l'actualité à la liste
