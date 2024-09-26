@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 Future<List<Topic>> initListTopic(List<Topic> listeTopics) async {
-  String baseUrl = '192.168.1.34';
+  String baseUrl = '81.49.122.157';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
@@ -42,7 +42,7 @@ Future<List<Topic>> initListTopic(List<Topic> listeTopics) async {
 
 
 Future<bool> addTopic(titre, message,id) async {
-  String baseUrl = '192.168.1.34';
+  String baseUrl = '81.49.122.157';
   Map<String, String> header = {
     "Content-type": "application/ld+json",
     "Accept": 'application/ld+json',
@@ -70,7 +70,7 @@ Future<bool> addTopic(titre, message,id) async {
 }
 
 Future<bool> addTopicR(topic, message,id) async {
-  String baseUrl = '192.168.1.34';
+  String baseUrl = '81.49.122.157';
   Map<String, String> header = {
     "Content-type": "application/ld+json",
     "Accept": 'application/ld+json',

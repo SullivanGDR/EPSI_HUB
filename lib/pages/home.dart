@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      drawer: appDrawer(context),
+      drawer: appDrawer(context,user),
       body: Column(
         children: [
           Padding(padding: const EdgeInsets.only(left: 16, top: 10, bottom: 10), child: Column(

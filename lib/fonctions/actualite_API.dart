@@ -3,7 +3,7 @@ import 'package:epsi_hub/class/actualite.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<Actualite>> initListActu(List<Actualite> listeActus) async {
-  String baseUrl = '192.168.1.34';
+  String baseUrl = '81.49.122.157';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
