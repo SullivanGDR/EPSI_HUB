@@ -55,6 +55,28 @@ Future<String?> getCampus(id) async {
   }
 }
 
+Future<int?> getCampusID(id) async {
+  String baseUrl = '81.49.122.157';
+  Map<String, String> header = {
+    "Content-type": "application/json; charset=UTF-8",
+    "Accept": 'application/ld+json',
+  };
+  final uri = Uri.http(baseUrl, '/api/users', {'id': id.toString()});
+
+  final response = await http.get(uri, headers: header);
+
+  if (response.statusCode == 200) {
+
+    final List dataList = json.decode(response.body)['member'];
+    int campus = dataList[0]['campus']['id'];
+    return campus;
+  } else {
+    print("Erreur: ${response.statusCode} - ${response.reasonPhrase}");
+    return null;
+  }
+}
+
+
 Future<bool> isLogin(token, id) async {
   String baseUrl = '81.49.122.157';
   Map<String, String> header = {

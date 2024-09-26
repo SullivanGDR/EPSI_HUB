@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:epsi_hub/class/signalement.dart';
+import 'package:epsi_hub/class/signalement_class.dart';
 import 'package:epsi_hub/class/user_class.dart';
 import 'package:epsi_hub/fonctions/signalement_API.dart';
 import 'package:flutter/cupertino.dart';

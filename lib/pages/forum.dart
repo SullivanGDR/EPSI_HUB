@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:epsi_hub/class/topic_class.dart';
 import 'package:epsi_hub/class/user_class.dart';
-import 'package:epsi_hub/fonctions/topic_api.dart';
+import 'package:epsi_hub/fonctions/topic_API.dart';
 import 'package:epsi_hub/pages/detailsTopic.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +25,11 @@ class _ForumPageState extends State<ForumPage> {
   bool _isLoading = true;
   final storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
   User user = User(0, "_email","role", "_token", "_prenom", "_nom", "_campus");
-  void _showPostModal() {
-    final TextEditingController _titleController = TextEditingController();
-    final TextEditingController _messageController = TextEditingController();
-    String _errorMessage = '';
 
+  void _showPostModal() {
+    final TextEditingController titleController = TextEditingController();
+    final TextEditingController messageController = TextEditingController();
+    String errorMessage = '';
     showModalBottomSheet(
         backgroundColor: Colors.white,
         context: context,
@@ -47,8 +47,8 @@ class _ForumPageState extends State<ForumPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Center(
-                        child: const Text(
+                      const Center(
+                        child: Text(
                           'Rédiger un nouveau post',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
@@ -57,7 +57,7 @@ class _ForumPageState extends State<ForumPage> {
                       ),
                       const SizedBox(height: 16),
                       TextField(
-                        controller: _titleController,
+                        controller: titleController,
                         decoration: InputDecoration(
                           labelText: 'Titre',
                           border: OutlineInputBorder(
@@ -68,7 +68,7 @@ class _ForumPageState extends State<ForumPage> {
                       const SizedBox(height: 16),
                       Expanded(
                         child: TextField(
-                          controller: _messageController,
+                          controller: messageController,
                           maxLines: null,
                           decoration: InputDecoration(
                             labelText: 'Message',
@@ -80,11 +80,11 @@ class _ForumPageState extends State<ForumPage> {
                           expands: true,
                         ),
                       ),
-                      if (_errorMessage.isNotEmpty)
+                      if (errorMessage.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            _errorMessage,
+                            errorMessage,
                             style: const TextStyle(
                                 color: Colors.red, fontWeight: FontWeight.bold),
                           ),
@@ -94,21 +94,18 @@ class _ForumPageState extends State<ForumPage> {
                         alignment: Alignment.bottomCenter,
                         child: ElevatedButton(
                           onPressed: () async{
-                            String title = _titleController.text;
-                            String message = _messageController.text;
+                            String title = titleController.text;
+                            String message = messageController.text;
                             if (title.isEmpty || message.isEmpty) {
                               setState(() {
-                                _errorMessage =
+                                errorMessage =
                                 'Veuillez remplir tous les champs.';
                               });
                             } else {
                               await addTopic(title, message, user.getId());
-                              print('Titre: $title');
-                              print('Message: $message');
-                              Navigator.popAndPushNamed(context,'/forum');// Ferme le modal après soumission
+                              Navigator.popAndPushNamed(context,'/forum');
                             }
                           },
-                          child: const Text('Publier'),
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -116,6 +113,7 @@ class _ForumPageState extends State<ForumPage> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 32, vertical: 12),
                           ),
+                          child: const Text('Publier'),
                         ),
                       ),
                     ],
@@ -135,7 +133,7 @@ class _ForumPageState extends State<ForumPage> {
 
   void chargement() async {
     _listeTopic = await initListTopic(_listeTopic);
-    print(_listeTopic);
+
     var value = await storage.read(key: "userData");
     if (value != null) {
       user = User.fromJson(jsonDecode(value));
@@ -181,7 +179,7 @@ class _ForumPageState extends State<ForumPage> {
             },
             child: Container(
               padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Colors.white,
                   border: Border(
                       bottom: BorderSide(color: Colors.black, width: 1.0)
@@ -195,11 +193,11 @@ class _ForumPageState extends State<ForumPage> {
                     children: [
                       Row(
                         children: [
-                          Icon(CupertinoIcons.person_crop_circle),
+                          const Icon(CupertinoIcons.person_crop_circle),
                           const SizedBox(width: 10),
                           Text(
-                            '${topic.getUtilisateur()}',
-                            style: TextStyle(
+                            topic.getUtilisateur(),
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -218,7 +216,7 @@ class _ForumPageState extends State<ForumPage> {
                   const SizedBox(height: 10),
                   Text(
                     topic.getDescription(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.black,
                     ),
@@ -226,7 +224,7 @@ class _ForumPageState extends State<ForumPage> {
                   const SizedBox(height: 5),
                   Row(
                     children: [
-                      Icon(CupertinoIcons.bubble_left_bubble_right),
+                      const Icon(CupertinoIcons.bubble_left_bubble_right),
                       const SizedBox(width: 5),
                       Text(
                         '${topic.getNbRep()} réponses disponibles',
@@ -245,8 +243,8 @@ class _ForumPageState extends State<ForumPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _showPostModal,
         backgroundColor: Colors.white,
-        child: Icon(CupertinoIcons.chat_bubble_2),
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
+        child: const Icon(CupertinoIcons.chat_bubble_2),
       ),
     );
   }

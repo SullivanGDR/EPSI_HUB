@@ -1,8 +1,8 @@
 import 'dart:convert';
-
+import 'package:epsi_hub/class/topicReponse_class.dart';
 import 'package:epsi_hub/class/topic_class.dart';
 import 'package:epsi_hub/class/user_class.dart';
-import 'package:epsi_hub/fonctions/topic_api.dart';
+import 'package:epsi_hub/fonctions/topic_API.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -22,7 +22,7 @@ class DetailsTopicPage extends StatefulWidget {
 
 class _DetailsTopicPageState extends State<DetailsTopicPage> {
   bool _showResponses = false;
-  final TextEditingController _messageController = TextEditingController(); // Controller pour le champ de texte
+  final TextEditingController _messageController = TextEditingController();
   bool _isLoading = true;
   final storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
   User user = User(0, "_email","role", "_token", "_prenom", "_nom", "_campus");
@@ -50,11 +50,11 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
           ? const Center(
         child: CircularProgressIndicator(),
       )
-          : _buildContent(),
+          : _buildContent(context),
     );
   }
-  @override
-  Widget _buildContent() {
+
+  Widget _buildContent(context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -66,7 +66,7 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
               ),
               child: Column(
@@ -77,11 +77,11 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
                     children: [
                       Row(
                         children: [
-                          Icon(CupertinoIcons.person_crop_circle),
+                          const Icon(CupertinoIcons.person_crop_circle),
                           const SizedBox(width: 10),
                           Text(
-                            '${widget.topic.getUtilisateur()}',
-                            style: TextStyle(
+                            widget.topic.getUtilisateur(),
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -100,7 +100,7 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
                   const SizedBox(height: 10),
                   Text(
                     widget.topic.getDescription(),
-                    style: TextStyle(fontSize: 14, color: Colors.black),
+                    style: const TextStyle(fontSize: 14, color: Colors.black),
                   ),
                   const SizedBox(height: 5),
                   GestureDetector(
@@ -111,7 +111,7 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
                     },
                     child: Row(
                       children: [
-                        Icon(CupertinoIcons.bubble_left_bubble_right),
+                        const Icon(CupertinoIcons.bubble_left_bubble_right),
                         const SizedBox(width: 5),
                         Text(
                           '${widget.topic.getNbRep()} réponses disponibles',
@@ -132,7 +132,7 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
                     secondChild: Column(
                       children: widget.topic.getRep().map((response) {
                         return ListTile(
-                          leading: Icon(CupertinoIcons.person_crop_circle),
+                          leading: const Icon(CupertinoIcons.person_crop_circle),
                           title: Text(response.getUtilisateur()),
                           subtitle: Text(response.getMessage()),
                         );
@@ -147,47 +147,63 @@ class _DetailsTopicPageState extends State<DetailsTopicPage> {
               ),
             ),
           ),
-          // Zone de texte pour envoyer un message
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      hintText: "Écrire un message...",
-                      border: OutlineInputBorder(
+          Container(
+            color: Colors.white, // Fond principal de la Row
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.transparent, // Fond transparent pour le TextField
                         borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.withOpacity(0.2)), // Bordure légère
+                      ),
+                      child: TextField(
+                        controller: _messageController,
+                        decoration: InputDecoration(
+                          hintText: "Écrire un message...",
+                          border: InputBorder.none,
+                          filled: false,
+                          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10), // Espacement interne
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  icon: Icon(Icons.send, color: Colors.blue),
-                  onPressed: () async{
-                    // Logique pour envoyer le message
-                    if (_messageController.text.isNotEmpty) {
-                      bool rep =await addTopicR(widget.topic.getId(), _messageController.text,user.getId());
-                      if (rep == true) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('réponse soumis avec succès !')),
-                        );
-                        Navigator.popAndPushNamed(context, '/forum');
-                      }else{
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Erreur lors de l'envoie de la réponse !")),
-                        );
-                      }
-                      // Ici tu peux ajouter la logique pour envoyer le message à ton backend
-                      _messageController.clear(); // Effacer le champ après l'envoi
-                    }
-                  },
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black, // Fond noir pour le bouton
+                      borderRadius: BorderRadius.circular(8), // Arrondir les bords du bouton
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.send, color: Colors.white), // Icône blanche
+                      onPressed: () async {
+                        if (_messageController.text.isNotEmpty) {
+                          bool rep = await addTopicR(widget.topic.getId(), _messageController.text, user.getId());
+                          TopicR(_messageController.text, DateTime.now(), user.getId().toString());
+
+                          if (rep == true) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Réponse soumise avec succès!')),
+                            );
+                            Navigator.popAndPushNamed(context, '/forum');
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Erreur lors de l'envoi de la réponse!")),
+                            );
+                          }
+                          _messageController.clear();
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+
         ],
       ),
     );

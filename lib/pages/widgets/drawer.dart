@@ -1,7 +1,5 @@
-import 'package:epsi_hub/class/user_class.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 
 Drawer appDrawer(BuildContext context,user) {
   return Drawer(
@@ -58,14 +56,14 @@ Drawer appDrawer(BuildContext context,user) {
                       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       child: Divider(),
                     ),
-                    Center(
+                    const Center(
                       child: Text(
                         "Panneau d'administration",
                         style: TextStyle(
-                          fontSize: 15,        // Taille du texte
-                          fontWeight: FontWeight.bold,  // Met en gras
-                          color: Colors.black,  // Couleur du texte
-                          letterSpacing: 1.5,  // Espacement des lettres
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          letterSpacing: 1.5,
                         ),
                       ),
                     ),

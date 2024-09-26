@@ -1,6 +1,8 @@
 import 'dart:convert';
-import 'package:epsi_hub/class/events.dart';
+import 'package:epsi_hub/class/events_class.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 Future<List<Event>> initListevent(List<Event> listeEvents) async {
   String baseUrl = '81.49.122.157';
@@ -20,13 +22,52 @@ Future<List<Event>> initListevent(List<Event> listeEvents) async {
       final String eventDescription = event['description'];
       final DateTime eventDate = DateTime.parse(event['date']);
       final String campus = event['ecole']['libelle'];
-      Event champion = Event(eventId, eventTitre, eventDescription,eventDate,campus);
-      print(champion);
-      listeEvents.add(champion);
+      Event newEvent = Event(eventId, eventTitre, eventDescription,eventDate,campus);
+      print(newEvent);
+      listeEvents.add(newEvent);
     }
     print("Chargement terminé !");
   } else {
     print("Error: ${response.statusCode} - ${response.reasonPhrase}");
   }
   return listeEvents;
+}
+
+Future<void> createEvent(int idType, String description, String titre, int idCampus, DateTime date) async {
+  String baseUrl = '81.49.122.157';
+  Map<String, String> header = {
+    "Content-type": "application/ld+json",
+    "Accept": 'application/ld+json',
+  };
+  final uri = Uri.http(baseUrl, '/api/events');
+
+  try {
+    Map<String, dynamic> jsonData = {
+      "titre": titre,
+      "date": DateFormat('yyyy-MM-dd').format(date),
+      "description": description,
+      "type": "http://81.49.122.157/api/event_types/$idType",
+      "ecole": "http://81.49.122.157/api/campuses/$idCampus",
+    };
+
+    final response = await http.post(
+      uri,
+      headers: header,
+      body: jsonEncode(jsonData),
+    );
+
+    if (response.statusCode == 201) {
+      if (kDebugMode) {
+        print("Actualité créée avec succès!");
+      }
+    } else {
+      if (kDebugMode) {
+        print("Erreur lors de la création de l'actualité: ${response.statusCode} - ${response.reasonPhrase}");
+      }
+    }
+  } catch (error) {
+    if (kDebugMode) {
+      print("Erreur lors de la création de l'actualité: $error");
+    }
+  }
 }

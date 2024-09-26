@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:epsi_hub/class/topicReponse_class.dart';
 
 class Topic {
@@ -25,7 +23,6 @@ class Topic {
   DateTime getDate() {
     return _date;
   }
-
   String getUtilisateur() {
     return _utilisateur;
   }

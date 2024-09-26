@@ -1,13 +1,11 @@
-class Signalement {
+class Event {
   final int id;
   final String titre;
   final String description;
   final DateTime date;
-  final String status;
-  final String nomUser;
-  final String prenomUser;
+  final String campus;
 
-  Signalement(this.id, this.titre, this.description, this.date, this.status, this.nomUser, this.prenomUser);
+  Event(this.id, this.titre, this.description, this.date,this.campus);
 
   int getId() {
     return id;
@@ -21,8 +19,7 @@ class Signalement {
   DateTime getDate() {
     return date;
   }
-
-  String getStatus() {
-    return status;
+  String getCampus() {
+    return campus;
   }
 }

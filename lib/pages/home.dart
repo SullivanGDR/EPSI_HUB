@@ -1,9 +1,7 @@
 import 'dart:convert';
-
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:epsi_hub/class/actualite.dart';
-import 'package:epsi_hub/class/events.dart';
+import 'package:epsi_hub/class/actualite_class.dart';
+import 'package:epsi_hub/class/events_class.dart';
 import 'package:epsi_hub/class/user_class.dart';
 import 'package:epsi_hub/fonctions/actualite_API.dart';
 import 'package:epsi_hub/fonctions/event_API.dart';
@@ -12,6 +10,7 @@ import 'package:epsi_hub/pages/login.dart';
 import 'package:epsi_hub/pages/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -27,11 +26,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // Création des listes.
   List<Event> _listeEvents = [];
   List<Actualite> _listeActualites = [];
+
+  // Création des listes filtrées.
+  List _filteredEvents = [];
+  List _filteredActu = [];
+
+  // Création de différentes variables.
   bool _isLoading = true;
   bool _isLog = false;
   User user = User(0, "_email","role", "_token", "_prenom", "_nom", "_campus");
+
+  // Initialisation du SecureStorage.
   final storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
 
   @override
@@ -40,27 +48,36 @@ class _HomePageState extends State<HomePage> {
     chargement();
   }
 
+  // Fonction qui se lance au lancement de l'application
   void chargement() async {
+    // Initialisations des listes d'actualités et d'événements.
     _listeEvents = await initListevent(_listeEvents);
     _listeActualites = await initListActu(_listeActualites);
-    print(_listeEvents);
-    print(_listeActualites);
+
+    // Récupération des données de l'utilisateur stockées localement.
     var value = await storage.read(key: "userData");
     if (value != null) {
       user = User.fromJson(jsonDecode(value));
-      print(user.getCampus());
       _isLog = await isLogin(user.getToken(), user.getId());
     }
+
+    // Filtrage des actualités et événements en fonction de l'école enregistrée
+    // sur le profil de l'utilisateur connecté.
+    _filtrerActuEtEventsParCampus(user.getCampus().toString());
+
     setState(() {
       _isLoading = false;
     });
   }
-  
-  String? selectedLocation;
 
-  List _filteredEvents = [];
-  // Liste des campus EPSI disponibles en France
+  // Liste des Campus
   final List<String> locations = [
+    'EPSI Angers',
+    'EPSI Auxerre',
+    'EPSI Chartres',
+    'EPSI Reims',
+    'EPSI Rennes',
+    'EPSI Saint-Etienne',
     'EPSI Paris',
     'EPSI Lille',
     'EPSI Lyon',
@@ -72,6 +89,10 @@ class _HomePageState extends State<HomePage> {
     'EPSI Grenoble',
   ];
 
+  // Variable qui garde en mémoire la localisation sélectionnée par l'utilisateur.
+  String? selectedLocation;
+
+  // Modal qui s'affiche pour choisir la localisation de l'utilisateur.
   void _showLocationModal() {
     showModalBottomSheet(
       backgroundColor: Colors.white,
@@ -96,9 +117,9 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         setState(() {
                           selectedLocation = location;
-                          _filterEventsByCampus(location);
+                          _filtrerActuEtEventsParCampus(location);
                         });
-                        Navigator.pop(context); // Ferme le modal
+                        Navigator.pop(context);
                       },
                     );
                   }).toList(),
@@ -111,9 +132,226 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _filterEventsByCampus(String campus) {
+  // Variables nécessaires pour le modal de la création d'actualité.
+  final _formKeyActualite = GlobalKey<FormState>();
+  String _titreActualite = '';
+  String _descriptionActualite = '';
+
+  //Modal qui apparaît lorsque l'on souhaite ajouter une actualité (uniquement disponible pour les administrateurs).
+  void _modalAjoutActu(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKeyActualite,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Créer un nouveau post',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Titre',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Veuillez entrer un titre';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      setState(() {
+                        _titreActualite = value!;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 4,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Veuillez entrer une description';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      setState(() {
+                        _descriptionActualite = value!;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKeyActualite.currentState!.validate()) {
+                        _formKeyActualite.currentState!.save();
+                        int? campusId = (await getCampusID(user.getId()));
+                        await createActu(user.getId(), _descriptionActualite, _titreActualite, campusId!);
+                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, '/accueil');
+                      }
+                    },
+                    child: const Text('Soumettre'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Variables nécessaires pour le modal de la création d'événements.
+  final _formKeyEvent = GlobalKey<FormState>();
+  String _titreEvent = '';
+  String _descriptionEvent = '';
+  DateTime? _selectedDateEvent;
+
+  //Modal qui apparaît lorsque l'on souhaite ajouter un événement (uniquement disponible pour les administrateurs).
+  void _modalAjoutEvent(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKeyEvent,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Créer un nouvel événement',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Titre',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Veuillez entrer un titre';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          _titreEvent = value!;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Description',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 4,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Veuillez entrer une description';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          _descriptionEvent = value!;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (pickedDate != null) {
+                          setState(() {
+                            _selectedDateEvent = pickedDate;
+                          });
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          _selectedDateEvent == null
+                              ? 'Sélectionner une date'
+                              : 'Date : ${DateFormat('dd/MM/yyyy').format(_selectedDateEvent!)}',
+                          style: const TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_formKeyEvent.currentState!.validate()) {
+                          _formKeyEvent.currentState!.save();
+                          if (_selectedDateEvent == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Veuillez sélectionner une date')),
+                            );
+                            return;
+                          }
+                          int? campusId = (await getCampusID(user.getId()));
+                          await createEvent(1, _descriptionEvent, _titreEvent, campusId!, _selectedDateEvent!);
+                          Navigator.pop(context);
+                          Navigator.popAndPushNamed(context, '/accueil');
+                        }
+                      },
+                      child: const Text('Soumettre'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Cette fonction nous permet de trier par campus les actualités et les événements à venir.
+  void _filtrerActuEtEventsParCampus(String campus) {
     setState(() {
       _filteredEvents = _listeEvents.where((event) => event.campus == campus).toList();
+      _filteredActu = _listeActualites.where((actualite) => actualite.campus == campus).toList();
     });
   }
 
@@ -125,7 +363,7 @@ class _HomePageState extends State<HomePage> {
           ? const Center(
             child: CircularProgressIndicator(),
       )
-          : _isLog ? _buildContent() : LoginPage(),
+          : _isLog ? _buildContent() : const LoginPage(),
     );
   }
 
@@ -160,12 +398,12 @@ class _HomePageState extends State<HomePage> {
                 'Emplacement actuel',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey[600], // Gris clair
+                  color: Colors.grey[600],
                 ),
               ),
               const SizedBox(height: 4),
               GestureDetector(
-                onTap: _showLocationModal, // Ouvre le modal au clic
+                onTap: _showLocationModal,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -201,9 +439,9 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'EPSI-WIS ARRAS',
-                        style: TextStyle(
+                      Text(
+                        event.campus,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -257,10 +495,9 @@ class _HomePageState extends State<HomePage> {
           const Padding(padding: EdgeInsets.only(left: 16), child:Text("Actualités", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),),
           const SizedBox(height: 10),
           Expanded(child: ListView.builder(
-            itemCount: _listeActualites.length,
+            itemCount: _filteredActu.length,
             itemBuilder: (context, index) {
-              // Récupérer l'actualité actuelle
-              final actualite = _listeActualites[index];
+              final actualite = _filteredActu[index];
 
               return Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16, top: 5, bottom: 5),
@@ -295,14 +532,14 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 child: ClipOval(
                                   child: Image.asset(
-                                    'assets/epsi_mini_logo.png', // Le logo de l'EPSI
+                                    'assets/epsi_mini_logo.png',
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                '${actualite.userNom} ${actualite.userPrenom}', // Afficher le nom de l'utilisateur
+                                '${actualite.userNom} ${actualite.userPrenom}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -310,12 +547,12 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          Text(DateFormat('dd/MM/yyyy').format(actualite.getDate())), // Afficher la date de la publication
+                          Text(DateFormat('dd/MM/yyyy').format(actualite.getDate())),
                         ],
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        actualite.getTitre(), // Afficher le titre de la publication
+                        actualite.getTitre(),
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -324,7 +561,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        actualite.getDescription(), // Afficher la description de la publication
+                        actualite.getDescription(),
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black,
@@ -335,9 +572,37 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             },
-          ),)
+          ),),
         ],
       ),
+      floatingActionButton: user.getRole() != 'ROLE_USER'
+          ? SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: Colors.white,
+        overlayColor: Colors.black,
+        overlayOpacity: 0.5,
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.article),
+            backgroundColor: Colors.white,
+            label: 'Créer une actualité',
+            labelStyle: TextStyle(fontSize: 16.0),
+            onTap: () {
+              _modalAjoutActu(context);
+            },
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.event),
+            backgroundColor: Colors.white,
+            label: 'Créer un événement',
+            labelStyle: TextStyle(fontSize: 16.0),
+            onTap: () {
+              _modalAjoutEvent(context);
+            },
+          ),
+        ],
+      )
+          : null,
     );
   }
 }

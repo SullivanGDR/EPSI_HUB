@@ -21,7 +21,6 @@ class Actualite {
   DateTime getDate() {
     return date;
   }
-
   String getCampus() {
     return campus;
   }

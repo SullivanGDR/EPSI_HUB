@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:epsi_hub/class/signalement.dart';
+import 'package:epsi_hub/class/signalement_class.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -25,10 +25,9 @@ Future<List<Signalement>> initListSignalement(List<Signalement> listeSignalement
       final String nomUser = signalement['user']['nom'];
       final String prenomUser = signalement['user']['prenom'];
 
-      // Créer l'instance d'Actualite avec les informations de l'utilisateur
       Signalement report = Signalement(id, titre, description, date, status, nomUser, prenomUser);
 
-      listeSignalement.add(report); // Ajouter l'actualité à la liste
+      listeSignalement.add(report);
     }
     print("Chargement terminé !");
   } else {
@@ -36,7 +35,6 @@ Future<List<Signalement>> initListSignalement(List<Signalement> listeSignalement
   }
   return listeSignalement;
 }
-
 
 Future<List<Signalement>> initListSignalementUser(List<Signalement> listeSignalement,int id) async {
   String baseUrl = '81.49.122.157';
@@ -60,10 +58,9 @@ Future<List<Signalement>> initListSignalementUser(List<Signalement> listeSignale
       final String nomUser = signalement['user']['nom'];
       final String prenomUser = signalement['user']['prenom'];
 
-      // Créer l'instance d'Actualite avec les informations de l'utilisateur
       Signalement report = Signalement(id, titre, description, date, status, nomUser, prenomUser);
 
-      listeSignalement.add(report); // Ajouter l'actualité à la liste
+      listeSignalement.add(report);
     }
     print("Chargement terminé !");
   } else {
