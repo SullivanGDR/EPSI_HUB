@@ -43,6 +43,7 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   heart_overlay: ^1.4.1
   flutter_speed_dial: ^7.0.0
+  easy_image_viewer: ^1.5.1
 
 dev_dependencies:
   flutter_test:

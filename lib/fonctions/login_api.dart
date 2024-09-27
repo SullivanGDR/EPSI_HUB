@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 
 Future<User?> login(email, mdp) async {
-  String baseUrl = '81.49.122.157';
+  String baseUrl = '10.60.12.45';
   Map<String, String> header = {
     "Content-type": "application/json",
     "Accept": 'application/json',
@@ -36,7 +36,7 @@ Future<User?> login(email, mdp) async {
 }
 
 Future<String?> getCampus(id) async {
-  String baseUrl = '81.49.122.157';
+  String baseUrl = '10.60.12.45';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
@@ -56,7 +56,7 @@ Future<String?> getCampus(id) async {
 }
 
 Future<int?> getCampusID(id) async {
-  String baseUrl = '81.49.122.157';
+  String baseUrl = '10.60.12.45';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
@@ -78,7 +78,7 @@ Future<int?> getCampusID(id) async {
 
 
 Future<bool> isLogin(token, id) async {
-  String baseUrl = '81.49.122.157';
+  String baseUrl = '10.60.12.45';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',

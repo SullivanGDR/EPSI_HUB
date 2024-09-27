@@ -1,3 +1,4 @@
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 
 class MapPage extends StatefulWidget {
@@ -8,6 +9,8 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  final imageProvider = Image.asset('assets/Carte_Epsi.png').image;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +20,18 @@ class _MapPageState extends State<MapPage> {
         centerTitle: true,
         title: Image.asset("assets/logo_epsi_portal2.png", width: 230,),
       ),
-      body: Text('Map'),
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            // Ouvrir l'image avec zoom et pan en utilisant EasyImageViewer
+            showImageViewer(context, imageProvider,
+                onViewerDismissed: () {
+                  print("Image Viewer dismissed");
+                });
+          },
+          child: Image.asset('assets/Carte_Epsi.png'), // Affichez un aperçu de la carte ici
+        ),
+      ),
     );
   }
 }

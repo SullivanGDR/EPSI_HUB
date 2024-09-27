@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:epsi_hub/class/user_class.dart';
 import 'package:epsi_hub/fonctions/login_api.dart';
-import 'package:epsi_hub/pages/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -85,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                   }else{
                     await storage.write(key: "userData", value: jsonEncode(res.toJson()));
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Vous êtes connecter')),
+                      const SnackBar(content: Text('Vous êtes connecté')),
                     );
                     Navigator.popAndPushNamed(context, '/accueil');
                   }
