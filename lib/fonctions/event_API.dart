@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 Future<List<Event>> initListevent(List<Event> listeEvents) async {
-  String baseUrl = '81.49.122.157';
+  String baseUrl = '10.60.12.45';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
@@ -34,7 +34,7 @@ Future<List<Event>> initListevent(List<Event> listeEvents) async {
 }
 
 Future<void> createEvent(int idType, String description, String titre, int idCampus, DateTime date) async {
-  String baseUrl = '81.49.122.157';
+  String baseUrl = '10.60.12.45';
   Map<String, String> header = {
     "Content-type": "application/ld+json",
     "Accept": 'application/ld+json',
@@ -46,8 +46,8 @@ Future<void> createEvent(int idType, String description, String titre, int idCam
       "titre": titre,
       "date": DateFormat('yyyy-MM-dd').format(date),
       "description": description,
-      "type": "http://81.49.122.157/api/event_types/$idType",
-      "ecole": "http://81.49.122.157/api/campuses/$idCampus",
+      "type": "http://10.60.12.45/api/event_types/$idType",
+      "ecole": "http://10.60.12.45/api/campuses/$idCampus",
     };
 
     final response = await http.post(

@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:epsi_hub/class/topicReponse_class.dart';
 import 'package:epsi_hub/class/topic_class.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 Future<List<Topic>> initListTopic(List<Topic> listeTopics) async {
-  String baseUrl = '81.49.122.157';
+  String baseUrl = '10.60.12.45';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
@@ -42,7 +41,7 @@ Future<List<Topic>> initListTopic(List<Topic> listeTopics) async {
 
 
 Future<bool> addTopic(titre, message,id) async {
-  String baseUrl = '81.49.122.157';
+  String baseUrl = '10.60.12.45';
   Map<String, String> header = {
     "Content-type": "application/ld+json",
     "Accept": 'application/ld+json',
@@ -70,7 +69,7 @@ Future<bool> addTopic(titre, message,id) async {
 }
 
 Future<bool> addTopicR(topic, message,id) async {
-  String baseUrl = '81.49.122.157';
+  String baseUrl = '10.60.12.45';
   Map<String, String> header = {
     "Content-type": "application/ld+json",
     "Accept": 'application/ld+json',

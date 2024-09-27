@@ -492,7 +492,14 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           const SizedBox(height: 10),
-          const Padding(padding: EdgeInsets.only(left: 16), child:Text("Actualités", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),),
+          const Padding(
+            padding: EdgeInsets.only(left: 16),
+            child:Text("Actualités",
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold),
+              ),
+            ),
           const SizedBox(height: 10),
           Expanded(child: ListView.builder(
             itemCount: _filteredActu.length,
