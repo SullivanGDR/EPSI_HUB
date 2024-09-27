@@ -1,14 +1,11 @@
-import 'package:epsi_hub/class/user_class.dart';
-
-class Actualite {
+class Event {
   final int id;
   final String titre;
   final String description;
   final DateTime date;
-  final String userNom;
-  final String userPrenom;
+  final String campus;
 
-  Actualite(this.id, this.titre, this.description, this.date, this.userNom, this.userPrenom);
+  Event(this.id, this.titre, this.description, this.date,this.campus);
 
   int getId() {
     return id;
@@ -21,5 +18,8 @@ class Actualite {
   }
   DateTime getDate() {
     return date;
+  }
+  String getCampus() {
+    return campus;
   }
 }

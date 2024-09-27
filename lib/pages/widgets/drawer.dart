@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Drawer appDrawer(BuildContext context) {
+Drawer appDrawer(BuildContext context,user) {
   return Drawer(
     backgroundColor: Colors.white,
     child: Column(
@@ -40,6 +40,42 @@ Drawer appDrawer(BuildContext context) {
                 onTap: () {
                   Navigator.popAndPushNamed(context, '/infos');
                 },
+              ),
+              ListTile(
+                leading: const Icon(CupertinoIcons.exclamationmark_octagon),
+                title: const Text("Vos signalements"),
+                onTap: () {
+                  Navigator.popAndPushNamed(context, '/signalements');
+                },
+              ),
+              Visibility(
+                visible: user.getRole()!='ROLE_USER',
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+                      child: Divider(),
+                    ),
+                    const Center(
+                      child: Text(
+                        "Panneau d'administration",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Icon(CupertinoIcons.exclamationmark_octagon),
+                      title: const Text("Les signalements"),
+                      onTap: () {
+                        Navigator.popAndPushNamed(context, '/signalementsAdmin');
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

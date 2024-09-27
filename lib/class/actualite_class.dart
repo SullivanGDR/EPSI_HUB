@@ -1,11 +1,13 @@
-class Event {
+class Actualite {
   final int id;
   final String titre;
   final String description;
   final DateTime date;
+  final String userNom;
+  final String userPrenom;
   final String campus;
 
-  Event(this.id, this.titre, this.description, this.date,this.campus);
+  Actualite(this.id, this.titre, this.description, this.date, this.userNom, this.userPrenom,this.campus);
 
   int getId() {
     return id;
@@ -19,7 +21,6 @@ class Event {
   DateTime getDate() {
     return date;
   }
-
   String getCampus() {
     return campus;
   }

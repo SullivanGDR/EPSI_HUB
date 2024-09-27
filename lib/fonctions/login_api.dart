@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 
 Future<User?> login(email, mdp) async {
-  String baseUrl = '10.60.12.49';
+  String baseUrl = '81.49.122.157';
   Map<String, String> header = {
     "Content-type": "application/json",
     "Accept": 'application/json',
@@ -21,11 +21,13 @@ Future<User?> login(email, mdp) async {
     final Map<String, dynamic> data = json.decode(response.body);
     var user = User(
         data["data"]["id"],
+        data["data"]["roles"][0],
         data["data"]["mail"],
         data["token"],
         data["data"]["prenom"],
         data["data"]["nom"],
-        data["data"]["campus"]);
+        await getCampus(data["data"]["id"].toString())
+        );
     return user;
   } else {
     print("Error: ${response.statusCode} - ${response.reasonPhrase}");
@@ -33,14 +35,56 @@ Future<User?> login(email, mdp) async {
   }
 }
 
+Future<String?> getCampus(id) async {
+  String baseUrl = '81.49.122.157';
+  Map<String, String> header = {
+    "Content-type": "application/json; charset=UTF-8",
+    "Accept": 'application/ld+json',
+  };
+  final uri = Uri.http(baseUrl, '/api/users', {'id': id});
+
+  final response = await http.get(uri, headers: header);
+
+  if (response.statusCode == 200) {
+    final List dataList = json.decode(response.body)['member'];
+    String campus = dataList[0]['campus']['libelle'];
+    return campus;
+  } else {
+    print("Error: ${response.statusCode} - ${response.reasonPhrase}");
+    return null;
+  }
+}
+
+Future<int?> getCampusID(id) async {
+  String baseUrl = '81.49.122.157';
+  Map<String, String> header = {
+    "Content-type": "application/json; charset=UTF-8",
+    "Accept": 'application/ld+json',
+  };
+  final uri = Uri.http(baseUrl, '/api/users', {'id': id.toString()});
+
+  final response = await http.get(uri, headers: header);
+
+  if (response.statusCode == 200) {
+
+    final List dataList = json.decode(response.body)['member'];
+    int campus = dataList[0]['campus']['id'];
+    return campus;
+  } else {
+    print("Erreur: ${response.statusCode} - ${response.reasonPhrase}");
+    return null;
+  }
+}
+
+
 Future<bool> isLogin(token, id) async {
-  String baseUrl = '10.60.12.49';
+  String baseUrl = '81.49.122.157';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
     'Authorization': "Bearer $token"
   };
-  final uri = Uri.http(baseUrl, '/GDSport/public/api/users/$id');
+  final uri = Uri.http(baseUrl, '/api/users/$id');
 
   final response = await http.get(uri, headers: header);
 

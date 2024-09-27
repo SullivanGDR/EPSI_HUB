@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'package:epsi_hub/class/actualite.dart';
-import 'package:epsi_hub/class/user_class.dart';
+import 'package:epsi_hub/class/actualite_class.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 Future<List<Actualite>> initListActu(List<Actualite> listeActus) async {
-  String baseUrl = '10.60.12.49';
+  String baseUrl = '81.49.122.157';
   Map<String, String> header = {
     "Content-type": "application/json; charset=UTF-8",
     "Accept": 'application/ld+json',
@@ -23,22 +24,62 @@ Future<List<Actualite>> initListActu(List<Actualite> listeActus) async {
       final DateTime actualiteDate = DateTime.parse(actualiteJson['date']);
       final String actualiteUserNom = actualiteJson['user']['nom'];
       final String actualiteUserPrenom = actualiteJson['user']['prenom'];
+      final String campus = actualiteJson['campus']['libelle'];
 
-      // Créer l'instance d'Actualite avec les informations de l'utilisateur
       Actualite actualite = Actualite(
         actualiteId,
         actualiteTitre,
         actualiteDescription,
         actualiteDate,
         actualiteUserNom,
-        actualiteUserPrenom
+        actualiteUserPrenom,
+        campus
       );
 
-      listeActus.add(actualite); // Ajouter l'actualité à la liste
+      listeActus.add(actualite);
     }
     print("Chargement terminé !");
   } else {
     print("Erreur: ${response.statusCode} - ${response.reasonPhrase}");
   }
   return listeActus;
+}
+
+Future<void> createActu(int idUser, String description, String titre, int idCampus) async {
+  String baseUrl = '81.49.122.157';
+  Map<String, String> header = {
+    "Content-type": "application/ld+json",
+    "Accept": 'application/ld+json',
+  };
+  final uri = Uri.http(baseUrl, '/api/actualites');
+
+  try {
+    Map<String, dynamic> jsonData = {
+      "description": description,
+      "date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      "titre": titre,
+      "user": "http://81.49.122.157/api/users/$idUser",
+      "campus": "http://81.49.122.157/api/campuses/$idCampus",
+    };
+
+    final response = await http.post(
+      uri,
+      headers: header,
+      body: jsonEncode(jsonData),
+    );
+
+    if (response.statusCode == 201) {
+      if (kDebugMode) {
+        print("Actualité créée avec succès!");
+      }
+    } else {
+      if (kDebugMode) {
+        print("Erreur lors de la création de l'actualité: ${response.statusCode} - ${response.reasonPhrase}");
+      }
+    }
+  } catch (error) {
+    if (kDebugMode) {
+      print("Erreur lors de la création de l'actualité: $error");
+    }
+  }
 }
